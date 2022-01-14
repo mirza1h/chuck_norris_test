@@ -1,0 +1,48 @@
+.content {
+  height: 100%;
+}
+
+.tile {
+  width: 50%;
+  height: 50%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  display: flex;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+@media screen and (max-width: 700px) {
+  .right {
+   float: none;
+  }
+  .left {
+    float: none;
+  }
+  .tile {
+    width: 100%;
+  }
+}
+
+.red {
+  background-color: red;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.blue {
+  background-color: blue;
+}
+
+.green {
+  background-color: green;
+}
