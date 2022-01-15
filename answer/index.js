@@ -3,7 +3,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   var jokeInput = document.getElementById("idJokeInput");
   // Registers click handler for the 'Play with me!' button
-  // Set max number for inpunt and loads initial jokes
+  // Set max number for input and loads initial jokes
   function init() {
     document.getElementById("idPlayBtn").addEventListener("click", () => onBtnClicked());
     fetchJokesCount().then((count) => {
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Event handler for button 'click' event
   // Decides and calls appropriate method for loading jokes
-  // Checks input validity
+  // Checks input validity if necessarry
   function onBtnClicked() {
     var jokeID = jokeInput.value;
     if (jokeID) {
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     )
   }
 
-  // Keeps fetching jokes until 3 unique jokes are loaded
+  // Keeps fetching jokes until 3 unique jokes are loaded and then sets them to divs
   function loadRandomJokes() {
     var setOfJokes = new Set();
     var keepFetching = function () {
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Fetches one joke object from API
+  // Fetches one joke object by ID from API
   function fetchJokeById(id) {
     return new Promise((resolve, reject) => {
       fetchFromAPI(`https://api.icndb.com/jokes/${id}`).then(value => resolve(value.joke));
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Fetches joke from priveded URL and returns parsed text
+  // Fetches data from priveded URL and returns parsed object
   function fetchFromAPI(url) {
     return new Promise((resolve, reject) => {
       fetch(url).then(response => response.json()).then((data) => {
