@@ -1,14 +1,11 @@
-.content {
-  height: 100%;
-}
-
 .tile {
   width: 50%;
   height: 50%;
+  display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  display: flex;
+  font-size: larger;
 }
 
 .left {
@@ -45,4 +42,9 @@
 
 .green {
   background-color: green;
+}
+
+.controlsDiv {
+  display: flex;
+  flex-direction: column;
 }

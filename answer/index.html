@@ -7,13 +7,18 @@
 </head>
 
 <body>
-  <div class="content">
+  <div>
     <div class="left tile red">
-      <button type="button" onclick="onBtnClicked()">Play with me!</button>
+      <div class="controlsDiv">
+        <input id="idJokeInput" type="number" min="0" max=""/>
+        <button id="idPlayBtn" type="button">Play with me!</button>
+      </div>
     </div>
-    <div id="yellow" class="right tile yellow">Yellow</div>
-    <div id="blue" class="left tile blue">Blue</div>
-    <div id="green" class="right tile green">Green</div>
+    <div id="jokesDiv">
+      <div id="yellow" class="right tile yellow"></div>
+      <div id="blue" class="left tile blue"></div>
+      <div id="green" class="right tile green"></div>
+    </div>
   </div>
 </body>
 
