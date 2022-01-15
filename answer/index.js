@@ -2,10 +2,14 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   var jokeInput = document.getElementById("idJokeInput");
-  // Registers click handler for the 'Play with me!' button
+  var jokeDivs = document.getElementById("jokesDiv").children;
+
+  // Registers event handlers
   // Set max number for input and loads initial jokes
   function init() {
     document.getElementById("idPlayBtn").addEventListener("click", () => onBtnClicked());
+    Array.from(jokeDivs).forEach(div => div.addEventListener("dragend", (event) => onDragEnd(event)));
+
     fetchJokesCount().then((count) => {
       jokeInput.max = count - 3;
     });
@@ -56,7 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Populates divs with jokes
   function setJokes(jokes) {
-    var jokeDivs = document.getElementById("jokesDiv").children;
     var count = 0;
     jokes.forEach((joke) => {
       jokeDivs[count++].innerHTML = joke;
@@ -93,7 +96,29 @@ document.addEventListener("DOMContentLoaded", () => {
         reject(err);
       });
     });
+  }
 
+  // Event handler for button 'dragend' event
+  // Swap content and classes of selected tile with target tile
+  function onDragEnd(event) {
+    const selectedTile = event.target;
+    var targetTile = getTargetTile(event);
+    var tempTile = selectedTile.cloneNode(true);
+    targetTile.classList.replace('right', 'left')
+    targetTile.classList.replace('left', 'right')
+    selectedTile.innerHTML = targetTile.innerHTML;
+    selectedTile.classList = targetTile.classList;
+    targetTile.innerHTML = tempTile.innerHTML;
+    targetTile.classList = tempTile.classList;
+  }
+
+  function getTargetTile(event) {
+    var element = document.elementFromPoint(event.clientX, event.clientY);
+    if (element && element.draggable)
+      return element;
+    else {
+      return event.target;
+    }
   }
 
   init();
