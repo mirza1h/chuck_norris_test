@@ -23,21 +23,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (jokeID) {
       if (jokeInput.checkValidity())
         loadJokesById(jokeID);
-      else {
+      else
         jokeInput.reportValidity();
-      }
     }
-    else {
+    else
       loadRandomJokes();
-    }
   }
 
   // Fetches 3 jokes with consecutive IDs and sets them to divs
   function loadJokesById(jokeID) {
     Promise.all([fetchJokeById(jokeID++), fetchJokeById(jokeID++), fetchJokeById(jokeID++)]).then(
-      (jokes) => {
-        setJokes(jokes);
-      }
+      (jokes) => { setJokes(jokes); }
     )
   }
 
@@ -52,9 +48,9 @@ document.addEventListener("DOMContentLoaded", () => {
           setOfJokes.add(joke);
           keepFetching();
         });
-      } else {
-        setJokes(setOfJokes);
       }
+      else
+        setJokes(setOfJokes);
     }
     keepFetching();
   }
@@ -64,9 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
     var count = 0;
     var allDivs = Array.from(document.getElementById("tileContainer").children);
     var jokeDivs = allDivs.filter(div => div.id !== 'red');
-    jokes.forEach((joke) => {
-      jokeDivs[count++].innerHTML = joke;
-    });
+    jokes.forEach((joke) => { jokeDivs[count++].innerHTML = joke; });
   }
 
   // Fetches one random joke object from API

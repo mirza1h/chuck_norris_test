@@ -32,18 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
     function swapTiles(sourceTile, targetTile) {
       var allTiles = document.getElementById("tileContainer");
       var nextTile = targetTile.nextElementSibling;
-      if (nextTile === sourceTile) {
+      if (nextTile === sourceTile)
         allTiles.insertBefore(sourceTile, targetTile);
-      }
-      else {
+      else
         allTiles.insertBefore(targetTile, sourceTile);
-      }
-      if (nextTile) {
+
+      if (nextTile)
         allTiles.insertBefore(sourceTile, nextTile);
-      }
-      else {
+      else
         allTiles.appendChild(sourceTile);
-      }
     }
   }
 
