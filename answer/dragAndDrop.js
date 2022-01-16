@@ -31,12 +31,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function swapTiles(sourceTile, targetTile) {
     var allTiles = document.getElementById("tileContainer");
     var nextTile = targetTile.nextElementSibling;
-    // Insert dragged tlle in place of target
+    // Insert target tile in place of source
     if (nextTile === sourceTile)
       allTiles.insertBefore(sourceTile, targetTile);
     else
       allTiles.insertBefore(targetTile, sourceTile);
-    // Insert target tile in place of source
+    // Insert source tile where target used to be
     if (nextTile)
       allTiles.insertBefore(sourceTile, nextTile);
     else
