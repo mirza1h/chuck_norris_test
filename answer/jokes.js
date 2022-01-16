@@ -6,7 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Sets max number for input and loads initial jokes
   function init() {
     registerEventHandlers();
-    fetchJokesCount().then((count) => { jokeInput.max = count - 3; });
+    fetchJokesCount().then((count) => {
+      jokeInput.disabled = false;
+      jokeInput.max = count - 3;
+    });
     loadRandomJokes();
   }
 
