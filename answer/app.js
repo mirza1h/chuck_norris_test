@@ -1,22 +1,25 @@
 "use strict";
-
 document.addEventListener("DOMContentLoaded", () => {
-  var jokeInput = document.getElementById("idJokeInput");
-  var jokeDivs = document.getElementById("jokesDiv").children;
+  var jokeInput = document.getElementById("jokeIDInput");
+  var allTiles = document.getElementById("tileContainer");
+  var allDivs = Array.from(allTiles.children);
 
   // Registers event handlers
   // Set max number for input and loads initial jokes
   function init() {
-    registerEventHandlers(onBtnClicked, jokeDivs, onDragEnd);
+    registerEventHandlers(allDivs, true);
     fetchJokesCount().then((count) => { jokeInput.max = count - 3; });
     loadRandomJokes();
   }
 
-  // Adds 'click' and 'dragend' event handlers
-  function registerEventHandlers(onBtnClicked, jokeDivs, onDragEnd) {
-    document.getElementById("idPlayBtn").addEventListener("click", () => onBtnClicked());
-    const allDivs = document.getElementsByClassName('tile');
-    Array.from(allDivs).forEach(div => div.addEventListener("dragend", (event) => onDragEnd(event)));
+  // Adds 'click' and drag event handlers
+  function registerEventHandlers(divs, registerClickEvent) {
+    if (registerClickEvent) {
+      document.getElementById("playBtn").addEventListener("click", () => onBtnClicked());
+    }
+    divs.forEach(div => div.addEventListener("dragstart", (event) => onDragStart(event)));
+    divs.forEach(div => div.addEventListener("drop", (event) => onDrop(event)));
+    divs.forEach(div => div.addEventListener("dragover", (event) => onDragOver(event)));
   }
 
   // Event handler for button 'click' event
@@ -66,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Populates divs with jokes
   function setJokes(jokes) {
     var count = 0;
+    var jokeDivs = allDivs.filter(div => div.id !== 'red');
     jokes.forEach((joke) => {
       jokeDivs[count++].innerHTML = joke;
     });
@@ -104,34 +108,46 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Event handler for button 'dragend' event
-  // Swaps selected and target tile
-  function onDragEnd(event) {
-    swapTiles(event.target, getTargetTile(event));
+  // Capture ID of dragged tile
+  function onDragStart(event) {
+    event.dataTransfer.setData("sourceID", event.target.id);
   }
 
-  // Get the tile element positioned at the coordinates where 'dragend' event finished
-  function getTargetTile(event) {
-    var element = document.elementFromPoint(event.clientX, event.clientY);
-    if (element && element.draggable)
-      return element;
-    else {
-      return event.target;
+  // Switch the position of source and target tile
+  // Re-register event handlers because by creating a new reference we lose them
+  function onDrop(event) {
+    event.preventDefault();
+    var sourceTile = document.getElementById(event.dataTransfer.getData("sourceID"));
+    var targetTile = document.getElementById(event.target.id);
+    if (sourceTile !== targetTile) {
+      var targetTileClone = targetTile.cloneNode(true);
+      var dragIndex = getIndexWithinParent(sourceTile);
+      switchPositions(sourceTile, targetTileClone);
+      allTiles.replaceChild(sourceTile, targetTile);
+      allTiles.insertBefore(targetTileClone, allTiles.childNodes[dragIndex]);
+      allTiles = document.getElementById("tileContainer");
+      allDivs = Array.from(allTiles.children);
+      registerEventHandlers([targetTileClone], targetTile.id === 'red' ? true : false);
     }
   }
 
-  // Swap content and classes of selected tile with target tile
-  function swapTiles(selectedTile, targetTile) {
-    selectedTile.classList.replace('right', 'left');
-    selectedTile.classList.replace('left', 'right');
-    var tempTile = selectedTile.cloneNode(true);
-    targetTile.classList.replace('right', 'left');
-    targetTile.classList.replace('left', 'right');
-    var tempTargetTile = targetTile.cloneNode(true);
-    targetTile.innerHTML = tempTile.innerHTML;
-    targetTile.classList = tempTile.classList;
-    selectedTile.innerHTML = tempTargetTile.innerHTML;
-    selectedTile.classList = tempTargetTile.classList;
+  // Switch CSS class (position) of elements
+  function switchPositions(sourceTile, targetTile) {
+    var sourceTileOriginalPosition = sourceTile.classList[0];
+    if (sourceTileOriginalPosition != targetTile.classList[0]) {
+      sourceTile.classList.replace(sourceTileOriginalPosition, targetTile.classList[0]);
+      targetTile.classList.replace(targetTile.classList[0], sourceTileOriginalPosition);
+    }
+  }
+
+  // Returns index of node within parent node
+  function getIndexWithinParent(node) {
+    return Array.prototype.indexOf.call(node.parentNode.childNodes, node);
+  }
+
+  // Cancel the default action for 'dragover' in order for 'drop' event to fire
+  function onDragOver(event) {
+    event.preventDefault();
   }
 
   init();

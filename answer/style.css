@@ -44,7 +44,7 @@
   background-color: green;
 }
 
-.controlsDiv {
+.controlContainer {
   display: flex;
   flex-direction: column;
 }
