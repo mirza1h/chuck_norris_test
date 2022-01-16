@@ -1,25 +1,18 @@
 "use strict";
 document.addEventListener("DOMContentLoaded", () => {
   var jokeInput = document.getElementById("jokeIDInput");
-  var allTiles = document.getElementById("tileContainer");
-  var allDivs = Array.from(allTiles.children);
 
   // Registers event handlers
-  // Set max number for input and loads initial jokes
+  // Sets max number for input and loads initial jokes
   function init() {
-    registerEventHandlers(allDivs, true);
+    registerEventHandlers();
     fetchJokesCount().then((count) => { jokeInput.max = count - 3; });
     loadRandomJokes();
   }
 
-  // Adds 'click' and drag event handlers
-  function registerEventHandlers(divs, registerClickEvent) {
-    if (registerClickEvent) {
-      document.getElementById("playBtn").addEventListener("click", () => onBtnClicked());
-    }
-    divs.forEach(div => div.addEventListener("dragstart", (event) => onDragStart(event)));
-    divs.forEach(div => div.addEventListener("drop", (event) => onDrop(event)));
-    divs.forEach(div => div.addEventListener("dragover", (event) => onDragOver(event)));
+  // Adds 'click' event handler
+  function registerEventHandlers() {
+    document.getElementById("playBtn").addEventListener("click", () => onBtnClicked());
   }
 
   // Event handler for button 'click' event
@@ -69,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Populates divs with jokes
   function setJokes(jokes) {
     var count = 0;
+    var allDivs = Array.from(document.getElementById("tileContainer").children);
     var jokeDivs = allDivs.filter(div => div.id !== 'red');
     jokes.forEach((joke) => {
       jokeDivs[count++].innerHTML = joke;
@@ -106,48 +100,6 @@ document.addEventListener("DOMContentLoaded", () => {
         reject();
       });
     });
-  }
-
-  // Capture ID of dragged tile
-  function onDragStart(event) {
-    event.dataTransfer.setData("sourceID", event.target.id);
-  }
-
-  // Switch the position of source and target tile
-  // Re-register event handlers because by creating a new reference we lose them
-  function onDrop(event) {
-    event.preventDefault();
-    var sourceTile = document.getElementById(event.dataTransfer.getData("sourceID"));
-    var targetTile = document.getElementById(event.target.id);
-    if (sourceTile !== targetTile) {
-      var targetTileClone = targetTile.cloneNode(true);
-      var dragIndex = getIndexWithinParent(sourceTile);
-      switchPositions(sourceTile, targetTileClone);
-      allTiles.replaceChild(sourceTile, targetTile);
-      allTiles.insertBefore(targetTileClone, allTiles.childNodes[dragIndex]);
-      allTiles = document.getElementById("tileContainer");
-      allDivs = Array.from(allTiles.children);
-      registerEventHandlers([targetTileClone], targetTile.id === 'red' ? true : false);
-    }
-  }
-
-  // Switch CSS class (position) of elements
-  function switchPositions(sourceTile, targetTile) {
-    var sourceTileOriginalPosition = sourceTile.classList[0];
-    if (sourceTileOriginalPosition != targetTile.classList[0]) {
-      sourceTile.classList.replace(sourceTileOriginalPosition, targetTile.classList[0]);
-      targetTile.classList.replace(targetTile.classList[0], sourceTileOriginalPosition);
-    }
-  }
-
-  // Returns index of node within parent node
-  function getIndexWithinParent(node) {
-    return Array.prototype.indexOf.call(node.parentNode.childNodes, node);
-  }
-
-  // Cancel the default action for 'dragover' in order for 'drop' event to fire
-  function onDragOver(event) {
-    event.preventDefault();
   }
 
   init();
