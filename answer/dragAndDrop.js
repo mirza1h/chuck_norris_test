@@ -23,35 +23,22 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
     var sourceTile = document.getElementById(event.dataTransfer.getData("sourceID"));
     var targetTile = document.getElementById(event.target.id);
-    if (sourceTile !== targetTile) {
+    if (sourceTile !== targetTile)
       swapTiles(sourceTile, targetTile);
-      swapPositionClasses(sourceTile, targetTile);
-    }
-
-    // Re-orders nodes inside parent container
-    function swapTiles(sourceTile, targetTile) {
-      var allTiles = document.getElementById("tileContainer");
-      var nextTile = targetTile.nextElementSibling;
-      if (nextTile === sourceTile)
-        allTiles.insertBefore(sourceTile, targetTile);
-      else
-        allTiles.insertBefore(targetTile, sourceTile);
-
-      if (nextTile)
-        allTiles.insertBefore(sourceTile, nextTile);
-      else
-        allTiles.appendChild(sourceTile);
-    }
   }
 
-  // Switch CSS class (position) of elements
-  function swapPositionClasses(sourceTile, targetTile) {
-    var sourceTilePosition = sourceTile.classList[0];
-    var targetTilePosition = targetTile.classList[0];
-    if (sourceTilePosition != targetTilePosition) {
-      sourceTile.classList.replace(sourceTilePosition, targetTilePosition);
-      targetTile.classList.replace(targetTilePosition, sourceTilePosition);
-    }
+  // Re-orders nodes inside parent container
+  function swapTiles(sourceTile, targetTile) {
+    var allTiles = document.getElementById("tileContainer");
+    var nextTile = targetTile.nextElementSibling;
+    if (nextTile === sourceTile)
+      allTiles.insertBefore(sourceTile, targetTile);
+    else
+      allTiles.insertBefore(targetTile, sourceTile);
+    if (nextTile)
+      allTiles.insertBefore(sourceTile, nextTile);
+    else
+      allTiles.appendChild(sourceTile);
   }
 
   // Cancel the default action for 'dragover' in order for 'drop' event to fire
