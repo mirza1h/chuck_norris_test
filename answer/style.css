@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-size: larger;
+  font-size: x-large;
 }
 
 @media screen and (max-width: 700px) {
